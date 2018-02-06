@@ -60,7 +60,6 @@
 %TODO
 
 %b
-%load in our audio file as specified in handout
 [x_long,Fs] = audioread('guitar10min.ogg');
 x = x_long(55*Fs:65*Fs,1);
 x = x/max(abs(x));
@@ -68,19 +67,18 @@ obj1 = audioplayer(x,Fs);
 
 %Find blocksize and number of blocks
 %More efficient way to do this???
-num = size(x);
-num = num(1);
-factors = factor(num);
-blocksize = factors(3);
-blocks = factors(1) * factors(2);
-windowsize = 151;
+num = size(x)
+num = num(1)
+factors = factor(num)
+blocksize = factors(3)
+blocks = factors(1) * factors(2)
 
 %Reshape array for use with our functions
-blockedSignal = reshape(x,[blocksize, blocks])';
+blockedSignal = reshape(x,[blocksize, blocks])'
 
 %Create our lowpass filter
 lowpass = [];
-s = init_running_mean(windowsize, blocksize);
+s = init_running_mean(151, blocksize);
 for index = 1:blocks
 [y, s] = calc_running_mean(blockedSignal(index, :), s);
 lowpass = horzcat(lowpass, y);
@@ -88,20 +86,18 @@ end
 obj2 = audioplayer(lowpass, Fs);
 
 %Create our highpass filter
-delay = (windowsize-1)/2;
-delayMatrix = zeros(1, delay);
-delayedX = horzcat(delayMatrix, x');
+delay = 50;
+delayMatrix = zeros(1, 50);
+delayedX = horzcat(delay, x')
 highpass = [];
 for index = 1:num
     highpass(index) = delayedX(index) - lowpass(index);
 end
 obj3 = audioplayer(highpass, Fs);
 %Create our audio mixer
-mixer = [];
+mixer = []
 for index = 1:num
-    mixer(index) = 2*lowpass(index) + 1*highpass(index);
+    mixer(index) = lowpass(index)  lowpass(index);
 end
-mixer = mixer/max(abs(mixer)); %Normalize values to +/- 1
-obj4 = audioplayer(mixer, Fs);
 %%  Question 5
 % TODO
