@@ -23,7 +23,7 @@ hold off
 
 %% Question 3 works sort of, part D gives issues??? Ask about later
 %(A)
-n = 0:50;
+n = 0:75;
 a = [1 -1.3 0.72 0.081 -0.3645];
 b = [2 2.8 1.6 -0.4 -1.2];
 h = impz(b, a, n);
@@ -32,6 +32,7 @@ stem(h)
 
 %(B)
 figure(3)
+hold on
 xn = [];
 for n = 0:75
     if n <=30
@@ -40,14 +41,15 @@ for n = 0:75
         xn(n+1) = 0;
     end
 end
-z = filter(b, a, xn)
-stem(z)
+z = filter(b, a, xn);
+stem(z, '-vb')
 %(C)
-figure(4)
-d = conv(h, xn)
-stem(d)
+
+d = conv(h, xn);
+d(77:end) = [];
+stem(d, '-^r')
 %(D)
-(d(1:76) == z)
+c = isequal(round(d),round(z))
 %% Question 4
 %(A)
 %See paper
