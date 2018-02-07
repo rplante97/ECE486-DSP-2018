@@ -32,22 +32,14 @@ stem(h)
 
 %(B)
 figure(3)
-xn = [];
-for n = 0:75
-    if n <=30
-        xn(n+1) = n*(30-n); 
-    else
-        xn(n+1) = 0;
-    end
-end
-z = filter(b, a, xn)
-stem(z)
+n = 0:75
+syms n;
+x = piecewise(0<=n<=30, n*(30-n), 0);
+%y = filter(b, a, z)
 %(C)
-figure(4)
-d = conv(h, xn)
-stem(d)
+
 %(D)
-(d(1:76) == z)
+
 %% Question 4
 %(A)
 %See paper
