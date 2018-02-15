@@ -1,27 +1,35 @@
+%Ryan Plante
+%DSP Homework 2
+%2/6/2018
+
 %% Question 1
 %(A)
-time = [0:1/1000000:3/1000];
+time = [0:1/1000000:3/1000]; %arbitrary large sampling rate
 g1 = cos(2*pi*(1000)*time);
 g2 = cos(2*pi*(9000)*time);
 figure(1)
 hold on
-plot(time, g1)
-plot(time, g2)
+plot(time*1000, g1)
+plot(time*1000, g2)
+xlabel('Time (ms)');
+ylabel('Amplitude');
+title('Question 1');
 
 %(B)
 time = [0:1/8000:3/1000]; %sampling now at 8ksps
-g1 = cos(2*pi*(1000)*time);
-g2 = cos(2*pi*(9000)*time);
-plot(time, g1, 'ro')
-plot(time, g2, 'c*')
+g18k = cos(2*pi*(1000)*time);
+g28k = cos(2*pi*(9000)*time);
+plot(time*1000, g18k, 'ro')
+plot(time*1000, g28k, 'c*')
+legend('g1', 'g2', 'g1 at 8ksps', 'g2 at 8ksps');
 hold off
 %(C)
-%TODO/See paper
+%See paper
 
 %% Question 2
 %See paper
 
-%% Question 3 works sort of, part D gives issues??? Ask about later
+%% Question 3
 %(A)
 n = 0:75;
 a = [1 -1.3 0.72 0.081 -0.3645];
@@ -29,6 +37,9 @@ b = [2 2.8 1.6 -0.4 -1.2];
 h = impz(b, a, n);
 figure(2)
 stem(h)
+xlabel('n');
+ylabel('Amplitude');
+title('Impulse Response of y[n] from n = 0 to 50');
 
 %(B)
 figure(3)
@@ -43,13 +54,19 @@ for n = 0:75
 end
 z = filter(b, a, xn);
 stem(z, '-vb')
+title('Output of x[n] using filter() and conv()');
+xlabel('n');
+ylabel('y[n]');
 %(C)
 
 d = conv(h, xn);
 d(77:end) = [];
 stem(d, '-^r')
+legend('Output using filter(b,a,x)', 'Output using conv(h,x)');
 %(D)
-c = isequal(round(d),round(z))
+%to compensate for matlab rounding errors we need to round each matrix
+%before checking for equality
+equalityCheck = isequal(round(d),round(z))
 %% Question 4
 %(A)
 %See paper
@@ -65,7 +82,7 @@ obj1 = audioplayer(x,Fs);
 %Probably a more efficient way to do this???
 num = size(x);
 num = num(1);
-factors = factor(num);
+factors = factor(num); %very computationally expensive
 blocksize = factors(3);
 blocks = factors(1) * factors(2);
 windowsize = 151;
